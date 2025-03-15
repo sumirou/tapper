@@ -13,7 +13,7 @@ pub struct ScoreSet {
     pub id: i32,
     pub accuracy: f64,
     pub unstable_rate: f64,
-    pub date: String,            // "YYYY-MM-DD"等の形式で保存
+    pub date: String,            // %Y-%m-%d %H:%M:%S
     pub map_set_id: Option<i32>, // map_setとの関連付け（NULL許容）
 }
 

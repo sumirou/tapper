@@ -25,7 +25,7 @@ impl State {
 
 fn is_finished(json: &Value) -> bool {
     // when failed: "data["play"]["healthBar"]["normal"] == 0
-    // when success: {"name":"play","number":2} -> {"name":"resultScreen","number":7}
+    // when success: {"name":"resultScreen","number":7}
     let state = State::from_str(
         json.get("state")
             .unwrap()
