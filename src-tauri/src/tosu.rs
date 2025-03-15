@@ -1,10 +1,9 @@
 use diesel::Identifiable;
 use futures_util::StreamExt;
-use serde_json::{from_str, Value};
+use serde_json::{Value, from_str};
 use tokio_tungstenite::connect_async;
 use tokio_tungstenite::tungstenite::Message;
 use url::Url;
-use chrono::Local;
 
 use crate::database;
 
@@ -83,9 +82,13 @@ pub async fn get_from_tosu() {
                                     .unwrap()
                                     .as_f64()
                                     .unwrap();
-                                let date = Local::now().format("%Y-%m-%d %H:%M:%S").to_string();
-                                let map_set = database::get_map_set(id).expect("failed to get map set");
-                                database::create_score_set(accuracy, unstable_rate, *map_set.id());
+                                let title = json.get("beatmap").unwrap().get("title").unwrap();
+                                let version = json.get("beatmap").unwrap().get("version").unwrap();
+                                let map_set =
+                                    database::find_map(title.to_string(), version.to_string())
+                                        .expect("failed to find map set");
+                                database::create_score_set(accuracy, unstable_rate, *map_set.id())
+                                    .expect("failed to create score");
                                 break;
                             }
                         }

@@ -31,7 +31,7 @@ allow_tables_to_appear_in_same_query!(map_sets, score_sets,);
 /// used for map_set table
 #[derive(Debug, Serialize, Deserialize, Identifiable, Queryable, AsChangeset)]
 #[table_name = "map_sets"]
-struct MapSet {
+pub struct MapSet {
     /// primary key
     id: i32,
     /// title
@@ -57,7 +57,7 @@ pub struct NewMapSet {
 #[derive(Debug, Serialize, Deserialize, Identifiable, Queryable, Associations, AsChangeset)]
 #[table_name = "score_sets"]
 #[belongs_to(MapSet)]
-struct ScoreSet {
+pub struct ScoreSet {
     /// primary key
     id: i32,
     /// accuracy
@@ -117,6 +117,14 @@ pub fn create_map_set(
 pub fn get_map_set(id: i32) -> Result<MapSet, diesel::result::Error> {
     let mut conn = POOL.get().expect("failed to get connection");
     map_sets::table.find(id).first::<MapSet>(&mut conn)
+}
+
+pub fn find_map(title: String, version: String) -> Result<MapSet, diesel::result::Error> {
+    let mut conn = POOL.get().expect("failed to get connection");
+    map_sets::table
+        .filter(map_sets::title.eq(title))
+        .filter(map_sets::version.eq(version))
+        .first::<MapSet>(&mut conn)
 }
 
 pub fn get_all_map_sets() -> Result<Vec<MapSet>, diesel::result::Error> {

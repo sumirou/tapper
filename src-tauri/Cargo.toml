@@ -28,4 +28,5 @@ tokio-tungstenite = "0.26.2"
 futures-util = "0.3.31"
 chrono = "0.4.40"
 diesel = { version = "2.2.8", features = ["r2d2", "sqlite"] }
+libsqlite3-sys = { version = "^0.31.0", features = ["bundled"] }
 
