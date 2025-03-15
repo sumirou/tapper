@@ -26,6 +26,6 @@ url = "2.5.4"
 async-tungstenite = "0.29.1"
 tokio-tungstenite = "0.26.2"
 futures-util = "0.3.31"
-rusqlite = { version = "0.34.0", features = ["bundled"] }
 chrono = "0.4.40"
+diesel = { version = "2.2.8", features = ["r2d2", "sqlite"] }
 

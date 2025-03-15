@@ -1,3 +1,4 @@
+use diesel::Identifiable;
 use futures_util::StreamExt;
 use serde_json::{from_str, Value};
 use tokio_tungstenite::connect_async;
@@ -5,7 +6,7 @@ use tokio_tungstenite::tungstenite::Message;
 use url::Url;
 use chrono::Local;
 
-use crate::database::add_score_set;
+use crate::database;
 
 enum State {
     Play,
@@ -75,7 +76,7 @@ pub async fn get_from_tosu() {
                                     .unwrap()
                                     .as_f64()
                                     .unwrap();
-                                let unsatble_rate = json
+                                let unstable_rate = json
                                     .get("play")
                                     .unwrap()
                                     .get("unstableRate")
@@ -83,7 +84,8 @@ pub async fn get_from_tosu() {
                                     .as_f64()
                                     .unwrap();
                                 let date = Local::now().format("%Y-%m-%d %H:%M:%S").to_string();
-                                add_score_set(accuracy, unsatble_rate, date, None).unwrap();
+                                let map_set = database::get_map_set(id).expect("failed to get map set");
+                                database::create_score_set(accuracy, unstable_rate, *map_set.id());
                                 break;
                             }
                         }
